@@ -1,0 +1,21 @@
+{
+  "name": "question-vault",
+  "version": "1.0.0",
+  "description": "Question Vault is a platform designed to provide a comprehensive and user-friendly space for asking questions and finding answers.",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tnowad/question-vault.git"
+  },
+  "author": "Nguyen Minh Tuan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tnowad/question-vault/issues"
+  },
+  "homepage": "https://github.com/tnowad/question-vault#readme"
+}
