@@ -2,6 +2,7 @@ version: '3.9'
 
 services:
   mysql:
+    container_name: mysql
     image: mysql:latest
     restart: always
     environment:
@@ -13,6 +14,7 @@ services:
       - dev-network
 
   backend:
+    container_name: backend
     build:
       context: ./backend
       dockerfile: Dockerfile
@@ -24,6 +26,7 @@ services:
       - mysql
 
   frontend:
+    container_name: frontend
     build:
       context: ./frontend
       dockerfile: Dockerfile
