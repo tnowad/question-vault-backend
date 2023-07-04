@@ -21,6 +21,8 @@ export class App {
   private initializeMiddlewares() {
     this.app.use(morgan(LOG_FORMAT as string, { stream }));
     this.app.use(cors({ origin: ORIGIN, credentials: CREDENTIALS == "true" }));
+    this.app.use(express.json());
+    this.app.use(express.urlencoded({ extended: true }));
   }
   private initializeRoutes(routes: Routes[]) {
     routes.forEach((route) => {

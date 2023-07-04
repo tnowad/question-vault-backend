@@ -1,40 +1,31 @@
 import { PrismaClient, User } from ".prisma/client";
 import { Service } from "typedi";
 import { HttpException } from "../exceptions/http.exception";
-import { compare } from "bcrypt";
+import { compare, hash } from "bcrypt";
 
 @Service()
 export class AuthService {
   public users = new PrismaClient().user;
   public async register(userData: User): Promise<User> {
-    const existingUser = await this.users.findMany({
-      where: {
-        OR: [{ username: userData.username }, { email: userData.email }],
-      },
+    const existingUser = await this.users.findFirst({
+      where: { email: userData.email },
     });
-    if (existingUser.length > 0) {
-      throw new HttpException(409, "Username or email already exists");
+    if (existingUser) {
+      throw new HttpException(409, "Email already exists");
     }
-    const hashedPassword = "";
+
+    const hashedPassword = await hash(userData.password, 10);
     const user = this.users.create({
       data: { ...userData, password: hashedPassword },
     });
+
     return user;
   }
 
   public async login(userData: User): Promise<User> {
-    const { username, email } = userData;
-
-    if (!username && !email) {
-      throw new HttpException(
-        409,
-        "Please provide either a username or an email."
-      );
-    }
-
     const user = await this.users.findFirst({
       where: {
-        OR: [{ username }, { email }],
+        OR: [{ email: userData.email }],
       },
     });
 
