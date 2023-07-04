@@ -8,6 +8,6 @@ RUN chown -R node:node /app
 
 USER node
 
-RUN npm install
+RUN npm install --ignore-scripts
 
 CMD ["npm", "run", "dev"]
