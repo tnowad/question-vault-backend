@@ -1,9 +1,12 @@
-import { cleanEnv, port, str } from "envalid";
+import { cleanEnv, port, str, bool } from "envalid";
 
 export const validateEnv = () => {
   cleanEnv(process.env, {
     PORT: port(),
-    LOG_DIR: str(),
+    DATABASE_URL: str(),
     LOG_FORMAT: str(),
+    LOG_DIR: str(),
+    ORIGIN: str(),
+    CREDENTIALS: bool(),
   });
 };
