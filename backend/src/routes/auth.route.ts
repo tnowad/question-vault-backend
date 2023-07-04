@@ -13,6 +13,10 @@ export class AuthRoute implements Routes {
   private initializeRoutes() {
     this.router.post(`${this.path}/register`, asyncHandler(this.auth.register));
     this.router.post(`${this.path}/login`, asyncHandler(this.auth.login));
+    this.router.post(
+      `${this.path}/refresh-token`,
+      asyncHandler(this.auth.refreshToken)
+    );
     this.router.post(`${this.path}/logout`, asyncHandler(this.auth.logout));
   }
 }

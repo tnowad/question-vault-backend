@@ -43,6 +43,11 @@ export class AuthController {
       next(error);
     }
   };
+  public refreshToken = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {};
   public logout = async (
     req: Request,
     res: Response,
