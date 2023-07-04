@@ -27,15 +27,18 @@ export class AuthService {
       where: { email: userData.email },
     });
 
-    if (!user) throw new HttpException(409, "This user was not found");
+    if (!user) {
+      throw new HttpException(409, "This user was not found");
+    }
 
     const isPasswordMatching: boolean = await compare(
       userData.password,
       user.password
     );
 
-    if (!isPasswordMatching)
+    if (!isPasswordMatching) {
       throw new HttpException(409, "Password is not matching");
+    }
 
     return user;
   }
