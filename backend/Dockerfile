@@ -2,11 +2,11 @@ FROM node:lts
 
 WORKDIR /app
 
+COPY package*.json ./
+
 RUN chown -R node:node /app
 
 USER node
-
-COPY package*.json ./
 
 RUN npm install
 
