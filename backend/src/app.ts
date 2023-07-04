@@ -1,6 +1,7 @@
 import express from "express";
-import { PORT } from "./config";
-import { logger } from "./utils/logger";
+import morgan from "morgan";
+import { LOG_FORMAT, PORT } from "./config";
+import { logger, stream } from "./utils/logger";
 export class App {
   public app: express.Application;
   public port: string | number;
@@ -12,5 +13,8 @@ export class App {
     this.app.listen(this.port, () => {
       logger.info(`> App listening on the port: ${this.port}`);
     });
+  }
+  public initializeMiddlewares() {
+    this.app.use(morgan(LOG_FORMAT as string, { stream }));
   }
 }
