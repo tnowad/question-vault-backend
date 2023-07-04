@@ -7,7 +7,6 @@ export class AuthController {
     next: NextFunction
   ): Promise<void> {
     try {
-      // Do something
     } catch (error) {
       next(error);
     }
