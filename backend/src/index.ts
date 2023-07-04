@@ -1,6 +1,6 @@
 import { App } from "./app";
 import { AuthRoute } from "./routes/auth.route";
-import { validateEnv } from "./utils/validateEnv";
+import { validateEnv } from "./utils/validateEnv.util";
 
 validateEnv();
 

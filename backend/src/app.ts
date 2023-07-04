@@ -3,7 +3,7 @@ import morgan from "morgan";
 import cors from "cors";
 import { Routes } from "./interfaces/routes.interface";
 import { CREDENTIALS, LOG_FORMAT, ORIGIN, PORT } from "./config";
-import { logger, stream } from "./utils/logger";
+import { logger, stream } from "./utils/logger.util";
 import { errorMiddleware } from "./middlewares/error.middleware";
 export class App {
   public app: express.Application;
