@@ -1,45 +1,47 @@
+import "reflect-metadata";
 import { User } from "@prisma/client";
 import { Request, Response, NextFunction } from "express";
-import { logger } from "../utils/logger";
 import Container from "typedi";
 import { AuthService } from "../services/auth.service";
 
 export class AuthController {
-  public auth = Container.get(AuthService);
+  public auth: AuthService = Container.get(AuthService);
 
-  public async register(
+  public register = async (
     req: Request,
     res: Response,
     next: NextFunction
-  ): Promise<void> {
+  ): Promise<void> => {
     try {
       const userData: User = req.body;
       const user = this.auth.register(userData);
-      res.json(user);
+      res.status(200).json(user);
     } catch (error) {
       next(error);
     }
-  }
-  public async login(
+  };
+  public login = async (
     req: Request,
     res: Response,
     next: NextFunction
-  ): Promise<void> {
+  ): Promise<void> => {
+    try {
+      const userData: User = req.body;
+      const user = this.auth.login(userData);
+      res.status(200).json(user);
+    } catch (error) {
+      next(error);
+    }
+  };
+  public logout = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       // Do something
     } catch (error) {
       next(error);
     }
-  }
-  public async logout(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> {
-    try {
-      // Do something
-    } catch (error) {
-      next(error);
-    }
-  }
+  };
 }

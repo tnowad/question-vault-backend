@@ -24,9 +24,7 @@ export class AuthService {
 
   public async login(userData: User): Promise<User> {
     const user = await this.users.findFirst({
-      where: {
-        OR: [{ email: userData.email }],
-      },
+      where: { email: userData.email },
     });
 
     if (!user) throw new HttpException(409, "This user was not found");
@@ -35,6 +33,7 @@ export class AuthService {
       userData.password,
       user.password
     );
+
     if (!isPasswordMatching)
       throw new HttpException(409, "Password is not matching");
 
