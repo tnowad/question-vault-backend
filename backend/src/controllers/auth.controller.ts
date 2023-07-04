@@ -1,37 +1,37 @@
 import { Request, Response, NextFunction } from "express";
 
 export class AuthController {
-  public register = async (
+  public async register(
     req: Request,
     res: Response,
     next: NextFunction
-  ): Promise<void> => {
+  ): Promise<void> {
     try {
       // Do something
     } catch (error) {
       next(error);
     }
-  };
-  public login = async (
+  }
+  public async login(
     req: Request,
     res: Response,
     next: NextFunction
-  ): Promise<void> => {
+  ): Promise<void> {
     try {
       // Do something
     } catch (error) {
       next(error);
     }
-  };
-  public logout = async (
+  }
+  public async logout(
     req: Request,
     res: Response,
     next: NextFunction
-  ): Promise<void> => {
+  ): Promise<void> {
     try {
       // Do something
     } catch (error) {
       next(error);
     }
-  };
+  }
 }
