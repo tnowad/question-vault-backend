@@ -3,6 +3,8 @@ import { User } from "@prisma/client";
 import { Request, Response, NextFunction } from "express";
 import Container from "typedi";
 import { AuthService } from "../services/auth.service";
+import { AuthPayload } from "../interfaces/auth.interface";
+import { generateAccessToken, generateRefreshToken } from "../utils/jwt.util";
 
 export class AuthController {
   public auth: AuthService = Container.get(AuthService);
@@ -30,7 +32,13 @@ export class AuthController {
     try {
       const userData: User = req.body;
       const user = await this.auth.login(userData);
-      res.status(200).json(user);
+      const authPayload: AuthPayload = { userId: user.id.toString() };
+      const accessToken = generateAccessToken(authPayload);
+      const refreshToken = generateRefreshToken(authPayload);
+      res.cookie("access_token", accessToken, { httpOnly: true });
+      res.cookie("refresh_token", refreshToken, { httpOnly: true });
+
+      res.status(200).json({ message: "Login successful" });
     } catch (error) {
       next(error);
     }
