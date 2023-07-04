@@ -14,7 +14,7 @@ export class AuthController {
   ): Promise<void> => {
     try {
       const userData: User = req.body;
-      const user = this.auth.register(userData);
+      const user = await this.auth.register(userData);
       res.status(200).json(user);
     } catch (error) {
       next(error);

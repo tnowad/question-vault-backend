@@ -4,6 +4,7 @@ import cors from "cors";
 import { Routes } from "./interfaces/routes.interface";
 import { CREDENTIALS, LOG_FORMAT, ORIGIN, PORT } from "./config";
 import { logger, stream } from "./utils/logger";
+import { errorMiddleware } from "./middlewares/error.middleware";
 export class App {
   public app: express.Application;
   public port: string | number;
@@ -12,6 +13,7 @@ export class App {
     this.port = PORT ?? 3000;
     this.initializeMiddlewares();
     this.initializeRoutes(routes);
+    this.initializeErrorHandling();
   }
   public listen() {
     this.app.listen(this.port, () => {
@@ -28,5 +30,8 @@ export class App {
     routes.forEach((route) => {
       this.app.use("/", route.router);
     });
+  }
+  private initializeErrorHandling() {
+    this.app.use(errorMiddleware);
   }
 }
