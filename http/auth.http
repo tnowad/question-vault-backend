@@ -6,7 +6,7 @@
 
 ### Register User ###
 # @name register
-POST {{baseUrl}}/api/auth/signup
+POST {{baseUrl}}/api/auth/register
 Content-Type: application/json
 
 {
@@ -17,7 +17,6 @@ Content-Type: application/json
 
 ### Login User ###
 # @name login
-
 POST {{baseUrl}}/api/auth/login
 Content-Type: application/json
 
@@ -25,6 +24,3 @@ Content-Type: application/json
   "email": "{{email}}",
   "password": "{{password}}"
 }
-
-@accessToken = {{login.response.body.access_token}}
-@refreshToken = {{login.response.body.refresh_token}}
