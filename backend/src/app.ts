@@ -1,5 +1,6 @@
 import express from "express";
 import { PORT } from "./config";
+import { logger } from "./utils/logger";
 export class App {
   public app: express.Application;
   public port: string | number;
@@ -9,7 +10,7 @@ export class App {
   }
   public listen() {
     this.app.listen(this.port, () => {
-      console.log(`> App listening on the port: ${this.port}`);
+      logger.info(`> App listening on the port: ${this.port}`);
     });
   }
 }
