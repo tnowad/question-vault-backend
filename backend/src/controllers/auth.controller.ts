@@ -32,7 +32,7 @@ export class AuthController {
     try {
       const userData: User = req.body;
       const user = await this.auth.login(userData);
-      const authPayload: AuthPayload = { userId: user.id.toString() };
+      const authPayload: AuthPayload = { userId: user.id };
       const accessToken = generateAccessToken(authPayload);
       const refreshToken = generateRefreshToken(authPayload);
       res.cookie("access_token", accessToken, { httpOnly: true });

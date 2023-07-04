@@ -20,9 +20,9 @@ const generateRefreshToken = (payload: AuthPayload): string => {
   return jwt.sign(payload, secretKey, options);
 };
 
-const verifyToken = (token: string, secretKey: string): string | object => {
+const verifyToken = (token: string): string | object => {
   try {
-    return jwt.verify(token, secretKey);
+    return jwt.verify(token, JWT_SECRET as string);
   } catch (error) {
     throw new Error("Invalid token");
   }
