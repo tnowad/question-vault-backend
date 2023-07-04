@@ -16,7 +16,7 @@ model User {
   email     String   @unique
   name      String?
   password  String
-  bio       String
+  bio       String?
   create_at DateTime @default(now())
   update_at DateTime @updatedAt
 }

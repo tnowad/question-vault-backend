@@ -9,14 +9,14 @@ export class AuthRoute implements Routes {
     this.initializeRoutes();
   }
   private initializeRoutes() {
-    this.router.post(`${this.path}/signup`, (req, res) => {
-      res.status(200).json({ message: "signup" });
+    this.router.post(`${this.path}/register`, (req, res) => {
+      res.status(200).json({ message: "register" });
     });
     this.router.post(`${this.path}/login`, (req, res) => {
-      res.status(200).json({ message: "signup" });
+      res.status(200).json({ message: "login" });
     });
     this.router.post(`${this.path}/logout`, (req, res) => {
-      res.status(200).json({ message: "signup" });
+      res.status(200).json({ message: "logout" });
     });
   }
 }
