@@ -49,7 +49,9 @@ export class AuthController {
     next: NextFunction
   ): Promise<void> => {
     try {
-      // Do something
+      res.clearCookie("access_token");
+      res.clearCookie("refresh_token");
+      res.status(200).json({ message: "Logout successful" });
     } catch (error) {
       next(error);
     }
