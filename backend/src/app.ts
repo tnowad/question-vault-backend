@@ -1,6 +1,7 @@
 import express from "express";
 import morgan from "morgan";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import { Routes } from "./interfaces/routes.interface";
 import { CREDENTIALS, LOG_FORMAT, ORIGIN, PORT } from "./config";
 import { logger, stream } from "./utils/logger.util";
@@ -23,6 +24,7 @@ export class App {
   private initializeMiddlewares() {
     this.app.use(morgan(LOG_FORMAT as string, { stream }));
     this.app.use(cors({ origin: ORIGIN, credentials: CREDENTIALS == "true" }));
+    this.app.use(cookieParser());
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
   }
