@@ -14,3 +14,12 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./frontend:/app
+
+  mysql:
+    image: mysql:latest
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=randompassword
+      - MYSQL_DATABASE=question_vault
+      - MYSQL_USER=questionvault
+      - MYSQL_PASSWORD=randompassword
