@@ -5,12 +5,10 @@ import Container from "typedi";
 import { AuthService } from "../services/auth.service";
 import { AuthPayload } from "../interfaces/auth.interface";
 import {
-  decodeToken,
   generateAccessToken,
   generateRefreshToken,
   verifyToken,
 } from "../utils/jwt.util";
-import { logger } from "../utils/logger.util";
 
 export class AuthController {
   public auth: AuthService = Container.get(AuthService);
