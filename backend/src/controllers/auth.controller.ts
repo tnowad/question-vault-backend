@@ -51,7 +51,7 @@ export class AuthController {
     req: Request,
     res: Response,
     next: NextFunction
-  ) => {
+  ): Promise<void> => {
     try {
       const refreshToken = req.cookies.refresh_token;
       const refreshTokenPayload = verifyToken(refreshToken) as AuthPayload;

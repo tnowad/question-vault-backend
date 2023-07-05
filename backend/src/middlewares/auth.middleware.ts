@@ -8,7 +8,7 @@ export const authMiddleware = async (
   req: Request,
   res: Response,
   next: NextFunction
-) => {
+): Promise<void> => {
   const accessToken = req.cookies.access_token;
   try {
     if (accessToken) {

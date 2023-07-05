@@ -1,7 +1,7 @@
 import { cleanEnv, port, str, bool } from "envalid";
 
-export const validateEnv = () => {
-  return cleanEnv(process.env, {
+export const validateEnv = (): typeof cleanedEnv => {
+  const cleanedEnv = cleanEnv(process.env, {
     PORT: port(),
     DATABASE_URL: str(),
     LOG_FORMAT: str(),
@@ -12,4 +12,5 @@ export const validateEnv = () => {
     ACCESS_TOKEN_EXPIRATION: str(),
     REFRESH_TOKEN_EXPIRATION: str(),
   });
+  return cleanedEnv;
 };

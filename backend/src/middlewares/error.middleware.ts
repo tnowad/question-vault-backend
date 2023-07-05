@@ -7,7 +7,7 @@ export const errorMiddleware = (
   req: Request,
   res: Response,
   next: NextFunction
-) => {
+): void => {
   try {
     const status: number = error.status || 500;
     const message: string = error.message || "Something went wrong";
