@@ -16,7 +16,7 @@ export class App {
     this.initializeRoutes(routes);
     this.initializeErrorHandling();
   }
-  public listen() {
+  public listen(): void {
     this.app.listen(this.port, () => {
       logger.info(`> App listening on the port: ${this.port}`);
     });

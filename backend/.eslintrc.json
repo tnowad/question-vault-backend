@@ -32,6 +32,9 @@
             "error",
             "always"
         ],
-        "@typescript-eslint/no-explicit-any": "error"
+        "no-trailing-spaces": "error",
+        "@typescript-eslint/no-explicit-any": "error",
+        "@typescript-eslint/no-empty-function": "error",
+        "@typescript-eslint/explicit-module-boundary-types": "error"
     }
 }
