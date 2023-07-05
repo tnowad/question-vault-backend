@@ -5,10 +5,12 @@ import Container from "typedi";
 import { AuthService } from "../services/auth.service";
 import { AuthPayload } from "../interfaces/auth.interface";
 import {
+  decodeToken,
   generateAccessToken,
   generateRefreshToken,
   verifyToken,
 } from "../utils/jwt.util";
+import { logger } from "../utils/logger.util";
 
 export class AuthController {
   public auth: AuthService = Container.get(AuthService);
@@ -52,10 +54,17 @@ export class AuthController {
     res: Response,
     next: NextFunction
   ) => {
-    const refreshToken = req.cookies.refresh_token;
-    const authPayload = verifyToken(refreshToken) as AuthPayload;
-    const accessToken = generateAccessToken(authPayload);
-    res.cookie("access_token", accessToken, { httpOnly: true });
+    try {
+      const refreshToken = req.cookies.refresh_token;
+      const refreshTokenPayload = verifyToken(refreshToken) as AuthPayload;
+      const accessToken = generateAccessToken({
+        userId: refreshTokenPayload.userId,
+      });
+      res.cookie("access_token", accessToken, { httpOnly: true });
+      res.status(200).json({ message: "Refresh access token successful" });
+    } catch (error) {
+      next(error);
+    }
   };
   public logout = async (
     req: Request,
