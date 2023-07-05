@@ -12,11 +12,10 @@ datasource db {
 
 model User {
   id        Int      @id @default(autoincrement())
-  username  String   @unique
   email     String   @unique
   name      String?
   password  String
-  bio       String
+  bio       String?
   create_at DateTime @default(now())
   update_at DateTime @updatedAt
 }

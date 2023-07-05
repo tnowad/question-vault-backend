@@ -1,21 +1,8 @@
 version: '3.9'
 
 services:
-  backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    volumes:
-      - ./backend:/app
-
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    volumes:
-      - ./frontend:/app
-
   mysql:
+    container_name: mysql
     image: mysql:latest
     restart: always
     environment:
@@ -23,3 +10,45 @@ services:
       - MYSQL_DATABASE=question_vault
       - MYSQL_USER=questionvault
       - MYSQL_PASSWORD=randompassword
+    networks:
+      - dev-network
+
+  backend:
+    container_name: backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    volumes:
+      - ./backend:/app
+    networks:
+      - dev-network
+    links:
+      - mysql
+
+  frontend:
+    container_name: frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    volumes:
+      - ./frontend:/app
+    networks:
+      - dev-network
+
+  proxy:
+    container_name: proxy
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./proxy/default.conf:/etc/nginx/conf.d/default.conf:ro
+    restart: "unless-stopped"
+    networks:
+      - dev-network
+    links:
+      - backend
+      - frontend
+
+networks:
+  dev-network:
+    driver: bridge
