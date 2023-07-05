@@ -4,7 +4,11 @@ import { Request, Response, NextFunction } from "express";
 import Container from "typedi";
 import { AuthService } from "../services/auth.service";
 import { AuthPayload } from "../interfaces/auth.interface";
-import { generateAccessToken, generateRefreshToken } from "../utils/jwt.util";
+import {
+  generateAccessToken,
+  generateRefreshToken,
+  verifyToken,
+} from "../utils/jwt.util";
 
 export class AuthController {
   public auth: AuthService = Container.get(AuthService);
@@ -47,7 +51,12 @@ export class AuthController {
     req: Request,
     res: Response,
     next: NextFunction
-  ) => {};
+  ) => {
+    const refreshToken = req.cookies.refresh_token;
+    const authPayload = verifyToken(refreshToken) as AuthPayload;
+    const accessToken = generateAccessToken(authPayload);
+    res.cookie("access_token", accessToken, { httpOnly: true });
+  };
   public logout = async (
     req: Request,
     res: Response,
