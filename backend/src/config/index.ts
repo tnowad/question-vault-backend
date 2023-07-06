@@ -1,4 +1,5 @@
 import { config } from "dotenv";
+import { validateEnv } from "../utils/validateEnv.util";
 
 config({ path: ".env" });
 
@@ -11,4 +12,4 @@ export const {
   JWT_SECRET,
   ACCESS_TOKEN_EXPIRATION,
   REFRESH_TOKEN_EXPIRATION,
-} = process.env;
+} = validateEnv();

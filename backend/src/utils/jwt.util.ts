@@ -20,7 +20,7 @@ const generateRefreshToken = (payload: AuthPayload): string => {
 
 const verifyToken = (token: string): string | JwtPayload => {
   try {
-    return jwt.verify(token, JWT_SECRET as string);
+    return jwt.verify(token, JWT_SECRET);
   } catch (error) {
     throw new Error("Invalid token");
   }
