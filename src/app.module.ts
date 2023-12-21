@@ -15,6 +15,7 @@ import { UsersModule } from './users/users.module';
       database: 'postgres',
       synchronize: true,
       autoLoadEntities: true,
+      logging: true,
     }),
     UsersModule,
   ],
