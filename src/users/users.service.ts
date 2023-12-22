@@ -63,8 +63,33 @@ export class UsersService {
     return `This action returns a #${id} user`;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    const user = await this.usersRepository.findOneBy({ id });
+
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+
+    if (updateUserDto.oldPassword && updateUserDto.newPassword) {
+      const isPasswordValid = await bcrypt.compare(
+        updateUserDto.oldPassword,
+        user.password,
+      );
+      if (!isPasswordValid) {
+        throw new BadRequestException('Old password is incorrect');
+      }
+      updateUserDto.password = await bcrypt.hash(
+        updateUserDto.newPassword,
+        saltRounds,
+      );
+    }
+
+    await this.usersRepository.update(id, updateUserDto);
+
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'User updated successfully',
+    };
   }
 
   remove(id: number) {
