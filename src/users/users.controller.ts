@@ -24,8 +24,12 @@ export class UsersController {
   }
 
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  findAll(
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit = 10,
+    @Query('search') search = '',
+  ) {
+    return this.usersService.findAll({ page, limit }, search);
   }
 
   @Get(':id')
