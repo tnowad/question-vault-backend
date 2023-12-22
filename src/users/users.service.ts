@@ -42,8 +42,21 @@ export class UsersService {
     };
   }
 
-  findAll() {
-    return `This action returns all users`;
+  async findAll(
+    paginationOptions: IPaginationOptions,
+    search?: string,
+  ): Promise<Pagination<User>> {
+    const queryBuilder = this.usersRepository
+      .createQueryBuilder('user')
+      .select(['user.id', 'user.fullName', 'user.email']);
+
+    if (search) {
+      queryBuilder.where('user.fullName LIKE :search', {
+        search: `%${search}%`,
+      });
+    }
+
+    return paginate<User>(queryBuilder, paginationOptions);
   }
 
   findOne(id: number) {
