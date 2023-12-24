@@ -4,7 +4,8 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
+
 import {
   IPaginationOptions,
   paginate,
@@ -24,16 +25,16 @@ export class UsersService {
       where: { email: createUserDto.email },
     });
 
-    if (existingUser) {
+    if (existingUser !== null) {
       throw new BadRequestException('User already exists');
     }
 
-    createUserDto.password = await bcrypt.hash(
-      createUserDto.password,
-      saltRounds,
-    );
+    const passwordHash = await bcrypt.hash(createUserDto.password, saltRounds);
+
+    createUserDto.password = passwordHash;
 
     const user = this.usersRepository.create(createUserDto);
+
     await this.usersRepository.save(user);
 
     return {
