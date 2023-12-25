@@ -1,24 +1,49 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import * as bcrypt from 'bcryptjs';
+import { AuthLoginEmailDto } from './dto/auth-login-email.dto';
 
 @Injectable()
 export class AuthService {
   constructor(private usersService: UsersService) { }
 
-  async validateUser(email: string, password: string) {
-    const user = await this.usersService.findOneByEmail(email);
+  async validateLogin(authLoginEmailDto: AuthLoginEmailDto) {
+    const user = await this.usersService.findOne({
+      email: authLoginEmailDto.email,
+    });
 
     if (!user) {
-      return null;
+      throw new HttpException(
+        {
+          status: HttpStatus.UNPROCESSABLE_ENTITY,
+          errors: {
+            email: 'User not found',
+          },
+        },
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = await bcrypt.compare(
+      authLoginEmailDto.password,
+      user.password,
+    );
 
     if (!isPasswordValid) {
-      return null;
+      throw new HttpException(
+        {
+          status: HttpStatus.UNPROCESSABLE_ENTITY,
+          errors: {
+            password: 'Incorrect password',
+          },
+        },
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
     }
 
-    return user;
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Login successful',
+    };
   }
 }
