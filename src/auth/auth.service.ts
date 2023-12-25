@@ -2,10 +2,14 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import * as bcrypt from 'bcryptjs';
 import { AuthLoginEmailDto } from './dto/auth-login-email.dto';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 
 @Injectable()
 export class AuthService {
-  constructor(private usersService: UsersService) { }
+  constructor(
+    private usersService: UsersService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+  ) { }
 
   async validateLogin(authLoginEmailDto: AuthLoginEmailDto) {
     const user = await this.usersService.findOne({
