@@ -1,19 +1,22 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import * as bcrypt from 'bcryptjs';
-import { AuthLoginEmailDto } from './dto/auth-login-email.dto';
+import { SignInDto } from './dto/sign-in.dto';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { SignUpDto } from './dto/sign-up.dto';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
+    private jwtService: JwtService,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) { }
 
-  async validateLogin(authLoginEmailDto: AuthLoginEmailDto) {
+  async signIn(signInDto: SignInDto) {
     const user = await this.usersService.findOne({
-      email: authLoginEmailDto.email,
+      email: signInDto.email,
     });
 
     if (!user) {
@@ -29,7 +32,7 @@ export class AuthService {
     }
 
     const isPasswordValid = await bcrypt.compare(
-      authLoginEmailDto.password,
+      signInDto.password,
       user.password,
     );
 
@@ -45,9 +48,38 @@ export class AuthService {
       );
     }
 
+    const payload = { sub: user.id, email: user.email };
+
     return {
       statusCode: HttpStatus.OK,
       message: 'Login successful',
+      access_token: await this.jwtService.signAsync(payload),
+    };
+  }
+
+  async signUp(signUpDto: SignUpDto) {
+    const candidate = await this.usersService.findOne({
+      email: signUpDto.email,
+    });
+
+    if (candidate) {
+      throw new HttpException(
+        {
+          status: HttpStatus.UNPROCESSABLE_ENTITY,
+          errors: {
+            email: 'User already exists',
+          },
+        },
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
+    }
+
+    const user = await this.usersService.create(signUpDto);
+
+    return {
+      statusCode: HttpStatus.CREATED,
+      message: 'User created successfully',
+      user,
     };
   }
 }
