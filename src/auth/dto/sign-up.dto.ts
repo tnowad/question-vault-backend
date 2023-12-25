@@ -1,15 +1,29 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, Matches, MaxLength } from 'class-validator';
+import { IsEmail, IsNotEmpty, Matches, MaxLength } from 'class-validator';
 
-export class AuthLoginEmailDto {
+export class SignUpDto {
   @ApiProperty({
     maxLength: 128,
     format: 'email',
-    required: true,
     example: 'john.doe@example.com',
   })
   @IsEmail()
   email: string;
+
+  @ApiProperty({ maxLength: 128, example: 'John Doe' })
+  @IsNotEmpty()
+  @MaxLength(128)
+  fullName: string;
+
+  @ApiProperty({ maxLength: 32, example: 'john_doe' })
+  @IsNotEmpty()
+  @MaxLength(32)
+  username: string;
+
+  @ApiProperty({ maxLength: 32, format: 'phone', example: '1234567890' })
+  @IsNotEmpty()
+  @MaxLength(32)
+  phone: string;
 
   @ApiProperty({
     maxLength: 128,
