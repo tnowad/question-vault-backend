@@ -2,7 +2,7 @@ import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import * as bcrypt from 'bcryptjs';
 
@@ -60,18 +60,8 @@ export class UsersService {
     return paginate<User>(queryBuilder, paginationOptions);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
-  }
-
-  async findOneByEmail(email: string) {
-    const user = await this.usersRepository.findOneBy({ email });
-
-    if (!user) {
-      return null;
-    }
-
-    return user;
+  findOne(fields: FindOptionsWhere<User>) {
+    return this.usersRepository.findOneBy(fields);
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
