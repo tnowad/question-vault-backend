@@ -20,7 +20,7 @@ export class UsersService {
     @InjectRepository(User) private usersRepository: Repository<User>,
   ) { }
 
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto): Promise<User> {
     const existingUser = await this.usersRepository.findOne({
       where: { email: createUserDto.email },
     });
@@ -37,10 +37,7 @@ export class UsersService {
 
     await this.usersRepository.save(user);
 
-    return {
-      statusCode: HttpStatus.CREATED,
-      message: 'User created successfully',
-    };
+    return user;
   }
 
   async findAll(
@@ -60,11 +57,17 @@ export class UsersService {
     return paginate<User>(queryBuilder, paginationOptions);
   }
 
-  findOne(fields: FindOptionsWhere<User>) {
-    return this.usersRepository.findOneBy(fields);
+  async findOne(fields: FindOptionsWhere<User>): Promise<User> {
+    const user = await this.usersRepository.findOneBy(fields);
+
+    if (user === null) {
+      throw new BadRequestException('User not found');
+    }
+
+    return user;
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto) {
+  async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
     const user = await this.usersRepository.findOneBy({ id });
 
     if (!user) {
@@ -85,15 +88,11 @@ export class UsersService {
       );
     }
 
-    await this.usersRepository.update(id, updateUserDto);
-
-    return {
-      statusCode: HttpStatus.OK,
-      message: 'User updated successfully',
-    };
+    const updatedUser = this.usersRepository.merge(user, updateUserDto);
+    return this.usersRepository.save(updatedUser);
   }
 
-  async remove(id: number) {
+  async remove(id: number): Promise<User> {
     const user = await this.usersRepository.findOneBy({ id });
 
     if (!user) {
