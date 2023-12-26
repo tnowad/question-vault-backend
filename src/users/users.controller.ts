@@ -9,6 +9,8 @@ import {
   ParseIntPipe,
   DefaultValuePipe,
   Query,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -26,6 +28,7 @@ export class UsersController {
     description: 'The user has been successfully created',
   })
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   async create(@Body() createUserDto: CreateUserDto) {
     return await this.usersService.create(createUserDto);
   }
@@ -39,6 +42,7 @@ export class UsersController {
     description: 'The users have been successfully retrieved',
   })
   @Get()
+  @HttpCode(HttpStatus.OK)
   findAll(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit = 10,
@@ -53,6 +57,7 @@ export class UsersController {
     description: 'The user has been successfully retrieved',
   })
   @Get(':id')
+  @HttpCode(HttpStatus.OK)
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.usersService.findOne({ id });
   }
@@ -63,6 +68,7 @@ export class UsersController {
     description: 'The user has been successfully updated',
   })
   @Patch(':id')
+  @HttpCode(HttpStatus.OK)
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateUserDto: UpdateUserDto,
@@ -72,10 +78,11 @@ export class UsersController {
 
   @ApiOperation({ summary: 'Delete a user' })
   @ApiResponse({
-    status: 200,
+    status: 204,
     description: 'The user has been successfully deleted',
   })
   @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.usersService.remove(id);
   }
