@@ -101,4 +101,14 @@ export class UsersService {
 
     return this.usersRepository.remove(user);
   }
+
+  async softDelete(id: number): Promise<void> {
+    const user = await this.usersRepository.findOneBy({ id });
+
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+
+    await this.usersRepository.softRemove(user);
+  }
 }
