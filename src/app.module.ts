@@ -6,6 +6,7 @@ import { CacheModule } from '@nestjs/cache-manager';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './auth/constants';
 import { ConfigModule } from '@nestjs/config';
+import configuration from './config/configuration';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { ConfigModule } from '@nestjs/config';
     ConfigModule.forRoot({
       ignoreEnvFile: true,
       isGlobal: true,
+      load: [configuration],
     }),
     UsersModule,
     AuthModule,
