@@ -5,6 +5,7 @@ import { AuthModule } from './auth/auth.module';
 import { CacheModule } from '@nestjs/cache-manager';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './auth/constants';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -27,8 +28,12 @@ import { jwtConstants } from './auth/constants';
     CacheModule.register({
       isGlobal: true,
     }),
+    ConfigModule.forRoot({
+      ignoreEnvFile: true,
+      isGlobal: true,
+    }),
     UsersModule,
     AuthModule,
   ],
 })
-export class AppModule { }
+export class AppModule {}
