@@ -14,7 +14,7 @@ import {
 } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 
-@Entity('users')
+@Entity({ name: 'users' })
 export class User {
   @PrimaryGeneratedColumn('increment')
   id: number;
