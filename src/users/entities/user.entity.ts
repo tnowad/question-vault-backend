@@ -1,5 +1,6 @@
 import { Exclude } from 'class-transformer';
 import { IsOptional, MaxLength, IsDate, IsEmail } from 'class-validator';
+import { Account } from 'src/accounts/entities/account.entity';
 import {
   AfterLoad,
   BeforeInsert,
@@ -9,10 +10,10 @@ import {
   DeleteDateColumn,
   Entity,
   Generated,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import * as bcrypt from 'bcryptjs';
 
 @Entity({ name: 'users' })
 export class User {
@@ -30,34 +31,8 @@ export class User {
   @MaxLength(32)
   phone: string;
 
-  @Column({ length: 32, nullable: true, unique: true })
-  @MaxLength(32)
-  username: string;
-
-  @Column({ unique: true })
-  @IsEmail()
-  email: string;
-
-  @Column({ nullable: true })
-  @Exclude({ toPlainOnly: true })
-  password: string;
-
-  @Exclude({ toPlainOnly: true })
-  public previousPassword: string;
-
-  @AfterLoad()
-  public loadPreviousPassword(): void {
-    this.previousPassword = this.password;
-  }
-
-  @BeforeInsert()
-  @BeforeUpdate()
-  async setPassword() {
-    if (this.previousPassword !== this.password && this.password) {
-      const salt = await bcrypt.genSalt();
-      this.password = await bcrypt.hash(this.password, salt);
-    }
-  }
+  @OneToMany(() => Account, (account) => account.user)
+  accounts: Account[];
 
   @Column({ type: 'date', nullable: true })
   @IsOptional()
