@@ -6,6 +6,7 @@ import { CacheModule } from '@nestjs/cache-manager';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './auth/constants';
 import { ConfigModule } from '@nestjs/config';
+import { AccountsModule } from './accounts/accounts.module';
 import configuration from './config/configuration';
 
 @Module({
@@ -36,6 +37,9 @@ import configuration from './config/configuration';
     }),
     UsersModule,
     AuthModule,
+    AccountsModule,
   ],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}
