@@ -1,10 +1,6 @@
-import { Exclude } from 'class-transformer';
 import { IsOptional, MaxLength, IsDate, IsEmail } from 'class-validator';
 import { Account } from 'src/accounts/entities/account.entity';
 import {
-  AfterLoad,
-  BeforeInsert,
-  BeforeUpdate,
   Column,
   CreateDateColumn,
   DeleteDateColumn,
@@ -30,6 +26,9 @@ export class User {
   @Column({ length: 32, nullable: true })
   @MaxLength(32)
   phone: string;
+
+  @Column({ unique: true })
+  username: string;
 
   @OneToMany(() => Account, (account) => account.user)
   accounts: Account[];
