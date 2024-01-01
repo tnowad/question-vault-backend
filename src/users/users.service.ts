@@ -4,15 +4,12 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, Repository } from 'typeorm';
 import { User } from './entities/user.entity';
-import * as bcrypt from 'bcryptjs';
 
 import {
   IPaginationOptions,
   paginate,
   Pagination,
 } from 'nestjs-typeorm-paginate';
-
-const saltRounds = 10;
 
 @Injectable()
 export class UsersService {
@@ -21,8 +18,9 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
+    const { username } = createUserDto;
     const existingUser = await this.usersRepository.findOne({
-      where: { email: createUserDto.email },
+      where: { username },
     });
 
     if (existingUser !== null) {
@@ -68,20 +66,6 @@ export class UsersService {
 
     if (!user) {
       throw new BadRequestException('User not found');
-    }
-
-    if (updateUserDto.oldPassword && updateUserDto.newPassword) {
-      const isPasswordValid = await bcrypt.compare(
-        updateUserDto.oldPassword,
-        user.password,
-      );
-      if (!isPasswordValid) {
-        throw new BadRequestException('Old password is incorrect');
-      }
-      updateUserDto.password = await bcrypt.hash(
-        updateUserDto.newPassword,
-        saltRounds,
-      );
     }
 
     const updatedUser = this.usersRepository.merge(user, updateUserDto);
