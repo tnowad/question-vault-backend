@@ -8,6 +8,7 @@ import { jwtConstants } from './auth/constants';
 import { ConfigModule } from '@nestjs/config';
 import { AccountsModule } from './accounts/accounts.module';
 import { AuthEmailModule } from './auth-email/auth-email.module';
+import { AuthGithubModule } from './auth-github/auth-github.module';
 import configuration from './config/configuration';
 
 @Module({
@@ -40,6 +41,7 @@ import configuration from './config/configuration';
     AuthModule,
     AccountsModule,
     AuthEmailModule,
+    AuthGithubModule,
   ],
   controllers: [],
   providers: [],
