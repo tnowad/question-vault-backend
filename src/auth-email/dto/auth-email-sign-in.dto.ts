@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, Matches, MaxLength } from 'class-validator';
 
-export class AuthEmailSignIn {
+export class AuthEmailSignInDto {
   @ApiProperty({
     maxLength: 128,
     format: 'email',
