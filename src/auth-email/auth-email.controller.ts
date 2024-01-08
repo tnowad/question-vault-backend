@@ -21,4 +21,20 @@ export class AuthEmailController {
     return { user, token };
   }
 
+  @Post('sign-up')
+  async signUp(@Body() authEmailSignUpDto: AuthEmailSignUpDto) {
+    const user = await this.authEmailService.signUp(authEmailSignUpDto);
+
+    // TODO: Send verification email
+    const message =
+      'Registration successful. Please check your email to verify your account.';
+
+    // TODO: Implement JWT
+    const token = {
+      accessToken: '',
+      refreshToken: '',
+    };
+
+    return { user, token, message };
+  }
 }
