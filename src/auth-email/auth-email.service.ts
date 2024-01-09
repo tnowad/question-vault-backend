@@ -53,22 +53,28 @@ export class AuthEmailService {
     return user;
   }
 
-  async signUp(authEmailSignUpDto: AuthEmailSignUpDto) {
-    const { email, password } = authEmailSignUpDto;
+  async signUp(authEmailSignInDto: AuthEmailSignUpDto) {
+    const { email, password, fullName, phone, username } = authEmailSignInDto;
 
-    const existingAccount = await this.accountsService.findOne({
+    const userExists = await this.usersService.findOne({
+      username,
+    });
+
+    if (userExists) {
+      throw new ConflictException(
+        'User with username already exists, please sign in',
+      );
+    }
+
+    const accountExists = await this.accountsService.findOne({
       provider: 'email',
       providerAccountId: email,
     });
-    if (existingAccount) {
-      throw new ConflictException('Account already exists');
-    }
 
-    const existingUser = await this.usersService.findOne({
-      username: authEmailSignUpDto.fullName,
-    });
-    if (existingUser) {
-      throw new ConflictException('User already exists');
+    if (accountExists) {
+      throw new ConflictException(
+        'Account with email already exists, please use another email',
+      );
     }
 
     const queryRunner = this.dataSource.createQueryRunner();
@@ -76,9 +82,14 @@ export class AuthEmailService {
 
     try {
       await queryRunner.startTransaction();
-      const user = await queryRunner.manager
-        .getRepository(User)
-        .save(authEmailSignUpDto);
+
+      const user = queryRunner.manager.getRepository(User).create({
+        username,
+        fullName,
+        phone,
+      });
+
+      await queryRunner.manager.getRepository(User).save(user);
 
       if (!user) {
         throw new InternalServerErrorException(
@@ -86,13 +97,15 @@ export class AuthEmailService {
         );
       }
 
-      const account = await queryRunner.manager.getRepository(Account).save({
+      const account = queryRunner.manager.getRepository(Account).create({
         type: 'credentials',
         provider: 'email',
         providerAccountId: email,
         user,
         password,
       });
+
+      await queryRunner.manager.getRepository(Account).save(account);
 
       if (!account) {
         throw new InternalServerErrorException(
