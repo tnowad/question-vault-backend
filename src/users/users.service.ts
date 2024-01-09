@@ -51,13 +51,8 @@ export class UsersService {
     return paginate<User>(queryBuilder, paginationOptions);
   }
 
-  async findOne(fields: FindOptionsWhere<User>): Promise<User> {
+  async findOne(fields: FindOptionsWhere<User>): Promise<User | null> {
     const user = await this.usersRepository.findOneBy(fields);
-
-    if (user === null) {
-      throw new BadRequestException('User not found');
-    }
-
     return user;
   }
 

@@ -13,8 +13,7 @@ export class AccountsService {
   ) {}
 
   async findOne(fields: FindOptionsWhere<Account>): Promise<Account | null> {
-    const account = await this.accountsRepository.findOneBy(fields);
-    return account;
+    return await this.accountsRepository.findOneBy(fields);
   }
 
   async create(createAccountDto: CreateAccountDto): Promise<Account | null> {
@@ -23,6 +22,10 @@ export class AccountsService {
     const user = await this.usersService.findOne({
       id: userId,
     });
+
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
 
     const existingAccount = await this.accountsRepository.findOne({
       where: { provider, providerAccountId },
