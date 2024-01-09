@@ -39,11 +39,11 @@ export class UsersService {
     search?: string,
   ): Promise<Pagination<User>> {
     const queryBuilder = this.usersRepository
-      .createQueryBuilder('user')
-      .select(['user.id', 'user.fullName', 'user.email']);
+      .createQueryBuilder('users')
+      .select(['users.id', 'users.fullName', 'users.username']);
 
     if (search) {
-      queryBuilder.where('user.fullName LIKE :search', {
+      queryBuilder.where('users.fullName LIKE :search', {
         search: `%${search}%`,
       });
     }
