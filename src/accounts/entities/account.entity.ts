@@ -63,7 +63,7 @@ export class Account {
   @BeforeInsert()
   @BeforeUpdate()
   async setPassword() {
-    if (this.provider !== 'local' || !this.password) {
+    if (this.provider !== 'email' || !this.password) {
       return;
     }
     if (this.previousPassword !== this.password && this.password) {
