@@ -22,7 +22,7 @@ export class AuthEmailService {
     @InjectDataSource() private dataSource: DataSource,
   ) {}
 
-  async signIn(authEmailSignInDto: AuthEmailSignInDto) {
+  async signIn(authEmailSignInDto: AuthEmailSignInDto): Promise<User> {
     const { email, password } = authEmailSignInDto;
 
     const account = await this.accountsService.findOne({
@@ -31,7 +31,7 @@ export class AuthEmailService {
     });
 
     if (!account) {
-      return null;
+      throw new NotFoundException('Account not found');
     }
 
     if (!account.password) {

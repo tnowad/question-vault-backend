@@ -10,5 +10,6 @@ import { AnonymousStrategy } from './anonymous.strategy';
   imports: [UsersModule, PassportModule.register({ defaultStrategy: 'jwt' })],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy, AnonymousStrategy],
+  exports: [AuthService],
 })
 export class AuthModule {}

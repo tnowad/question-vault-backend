@@ -3,21 +3,21 @@ import { AuthEmailSignInDto } from './dto/auth-email-sign-in.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthEmailSignUpDto } from './dto/auth-email-sign-up.dto';
 import { AuthEmailService } from './auth-email.service';
+import { AuthService } from 'src/auth/auth.service';
 
 @ApiTags('auth/email')
 @Controller('auth/email')
 export class AuthEmailController {
-  constructor(private readonly authEmailService: AuthEmailService) {}
+  constructor(
+    private readonly authEmailService: AuthEmailService,
+    private readonly authService: AuthService,
+  ) {}
 
   @Post('sign-in')
   async signIn(@Body() authEmailSignInDto: AuthEmailSignInDto) {
     const user = await this.authEmailService.signIn(authEmailSignInDto);
+    const token = await this.authService.createTokens(user);
 
-    // TODO: Implement JWT
-    const token = {
-      accessToken: '',
-      refreshToken: '',
-    };
     return { user, token };
   }
 

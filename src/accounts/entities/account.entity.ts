@@ -49,7 +49,7 @@ export class Account {
   @Column({ nullable: true })
   password?: string;
 
-  @ManyToOne(() => User, (user) => user.accounts)
+  @ManyToOne(() => User, (user) => user.accounts, { eager: true })
   user: User;
 
   @Exclude({ toPlainOnly: true })
