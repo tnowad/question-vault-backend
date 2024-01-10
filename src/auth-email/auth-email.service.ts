@@ -20,7 +20,7 @@ export class AuthEmailService {
     private readonly accountsService: AccountsService,
     private readonly usersService: UsersService,
     @InjectDataSource() private dataSource: DataSource,
-  ) {}
+  ) { }
 
   async signIn(authEmailSignInDto: AuthEmailSignInDto): Promise<User> {
     const { email, password } = authEmailSignInDto;
@@ -44,7 +44,7 @@ export class AuthEmailService {
       throw new NotFoundException('Invalid password');
     }
 
-    const user = account.user;
+    const user = await this.usersService.findOne({ id: account.userId });
 
     if (!user) {
       throw new NotFoundException('User not found');

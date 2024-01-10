@@ -8,6 +8,7 @@ import {
   BeforeInsert,
   AfterLoad,
   BeforeUpdate,
+  JoinColumn,
 } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 
@@ -49,8 +50,12 @@ export class Account {
   @Column({ nullable: true })
   password?: string;
 
-  @ManyToOne(() => User, (user) => user.accounts, { eager: true })
+  @ManyToOne(() => User, (user) => user.accounts)
+  @JoinColumn({ name: 'userId' })
   user: User;
+
+  @Column()
+  userId: number;
 
   @Exclude({ toPlainOnly: true })
   public previousPassword?: string;
