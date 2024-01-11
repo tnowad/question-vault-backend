@@ -13,6 +13,7 @@ import { DataSource } from 'typeorm';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { Account } from 'src/accounts/entities/account.entity';
 import { User } from 'src/users/entities/user.entity';
+import { AuthProvidersEnum } from 'src/auth/auth-providers.enum';
 
 @Injectable()
 export class AuthEmailService {
@@ -20,7 +21,7 @@ export class AuthEmailService {
     private readonly accountsService: AccountsService,
     private readonly usersService: UsersService,
     @InjectDataSource() private dataSource: DataSource,
-  ) { }
+  ) {}
 
   async signIn(authEmailSignInDto: AuthEmailSignInDto): Promise<User> {
     const { email, password } = authEmailSignInDto;
@@ -67,7 +68,7 @@ export class AuthEmailService {
     }
 
     const accountExists = await this.accountsService.findOne({
-      provider: 'email',
+      provider: AuthProvidersEnum.email,
       providerAccountId: email,
     });
 
@@ -99,7 +100,7 @@ export class AuthEmailService {
 
       const account = queryRunner.manager.getRepository(Account).create({
         type: 'credentials',
-        provider: 'email',
+        provider: AuthProvidersEnum.email,
         providerAccountId: email,
         user,
         password,

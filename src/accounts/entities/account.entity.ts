@@ -11,6 +11,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
+import { AuthProvidersEnum } from 'src/auth/auth-providers.enum';
 
 @Entity('accounts')
 export class Account {
@@ -20,7 +21,7 @@ export class Account {
   @Column()
   type: string;
 
-  @Column()
+  @Column({ default: AuthProvidersEnum.email })
   provider: string;
 
   @Column({ name: 'providerAccountId' })
