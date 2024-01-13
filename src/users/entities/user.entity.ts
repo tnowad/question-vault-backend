@@ -1,11 +1,15 @@
-import { IsOptional, MaxLength, IsDate, IsEmail } from 'class-validator';
+import { IsOptional, MaxLength, IsDate } from 'class-validator';
 import { Account } from 'src/accounts/entities/account.entity';
+import { Role } from 'src/roles/entities/role.entity';
+
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
   Generated,
+  JoinTable,
+  ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -32,6 +36,14 @@ export class User {
 
   @OneToMany(() => Account, (account) => account.user)
   accounts: Account[];
+
+  @ManyToMany(() => Role)
+  @JoinTable({
+    name: 'users_roles',
+    joinColumn: { name: 'userId', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'roleId', referencedColumnName: 'id' },
+  })
+  roles: Role[];
 
   @Column({ type: 'date', nullable: true })
   @IsOptional()

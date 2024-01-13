@@ -17,6 +17,9 @@ export class Permission {
   @Column({ type: String })
   name: string;
 
+  @ManyToMany(() => Role, (role: Role) => role.permissions)
+  roles: Role[];
+
   @CreateDateColumn()
   createdAt: Date;
 
