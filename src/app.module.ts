@@ -11,6 +11,7 @@ import { AuthEmailModule } from './auth-email/auth-email.module';
 import { AuthGithubModule } from './auth-github/auth-github.module';
 import { PermissionsModule } from './permissions/permissions.module';
 import { RolesModule } from './roles/roles.module';
+import { DatabaseSeederModule } from './database-seeder/database-seeder.module';
 import configuration from './config/configuration';
 
 @Module({
@@ -46,6 +47,7 @@ import configuration from './config/configuration';
     AuthGithubModule,
     PermissionsModule,
     RolesModule,
+    DatabaseSeederModule,
   ],
   controllers: [],
   providers: [],
