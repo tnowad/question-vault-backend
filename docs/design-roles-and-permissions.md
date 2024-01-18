@@ -36,22 +36,21 @@ This document outlines the roles and permissions system for the Question Vault b
 - System Moderator
   - System Monitoring
   - User Support
+- Role Moderator
+  - Role Management
 
 #### User
 
-- Senior User
-  - Enhanced Interaction
-  - Content Flagging
+- User
+  - View Content
+  - Basic Profile Management
+- Junior User
+  - Post Content
 - Middle User
   - Basic Interaction
   - Limited Reporting
-- Junior User
-  - View and Post
-  - Basic Profile Management
+- Senior User
+  - Enhanced Interaction
+  - Content Flagging
 
 #### Anonymous
-
-- View Access
-- Restricted Participation (optional)
-
-## Permissions
