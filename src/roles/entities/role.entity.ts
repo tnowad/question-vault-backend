@@ -5,8 +5,11 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
   JoinTable,
   ManyToMany,
+  ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -40,6 +43,16 @@ export class Role {
     },
   })
   constrainedRoles: Role[];
+
+  @Column({ name: 'parentRoleId', nullable: true })
+  parentRoleId: number;
+
+  @ManyToOne(() => Role, (role: Role) => role.childRoles)
+  @JoinColumn({ name: 'parentRoleId' })
+  parentRole: Role;
+
+  @OneToMany(() => Role, (role: Role) => role.parentRole)
+  childRoles: Role[];
 
   @CreateDateColumn()
   createdAt: Date;
