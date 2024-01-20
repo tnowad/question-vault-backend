@@ -34,7 +34,7 @@ export class User {
   @Column({ unique: true })
   username: string;
 
-  @OneToMany(() => Account, (account) => account.user)
+  @OneToMany(() => Account, (account) => account.user, { cascade: ['insert'] })
   accounts: Account[];
 
   @ManyToMany(() => Role)

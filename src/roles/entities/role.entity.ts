@@ -19,6 +19,12 @@ export class Role {
   @Column({ type: String })
   name: string;
 
+  @Column({ type: String, nullable: true })
+  description: string;
+
+  @Column({ type: String, unique: true })
+  value: string;
+
   @ManyToMany(() => Permission, (permission: Permission) => permission.roles, {
     createForeignKeyConstraints: false,
   })
