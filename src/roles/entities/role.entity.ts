@@ -5,11 +5,8 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
-  JoinColumn,
   JoinTable,
   ManyToMany,
-  ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -22,7 +19,9 @@ export class Role {
   @Column({ type: String })
   name: string;
 
-  @ManyToMany(() => Permission, (permission: Permission) => permission.roles)
+  @ManyToMany(() => Permission, (permission: Permission) => permission.roles, {
+    createForeignKeyConstraints: false,
+  })
   @JoinTable({
     name: 'roles_permissions',
     joinColumn: { name: 'roleId', referencedColumnName: 'id' },
@@ -44,14 +43,19 @@ export class Role {
   })
   constrainedRoles: Role[];
 
-  @Column({ name: 'parentRoleId', nullable: true })
-  parentRoleId: number;
+  @ManyToMany(() => Role, (role) => role.childRoles, {
+    cascade: ['insert', 'update', 'remove'],
+    createForeignKeyConstraints: false,
+    onDelete: 'RESTRICT',
+  })
+  @JoinTable({
+    name: 'role_parents',
+    joinColumn: { name: 'childRoleId', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'parentRoleId', referencedColumnName: 'id' },
+  })
+  parentRoles: Role[];
 
-  @ManyToOne(() => Role, (role: Role) => role.childRoles)
-  @JoinColumn({ name: 'parentRoleId' })
-  parentRole: Role;
-
-  @OneToMany(() => Role, (role: Role) => role.parentRole)
+  @ManyToMany(() => Role, (role) => role.parentRoles)
   childRoles: Role[];
 
   @CreateDateColumn()
