@@ -20,6 +20,9 @@ export class DatabaseSeederService implements OnModuleInit {
     private readonly accountsRepository: Repository<Account>,
   ) {}
   async onModuleInit() {
+    if (process.env.NODE_ENV === 'production') {
+      return;
+    }
     await this.seedPermissions();
     await this.seedRoles();
     await this.seedUsers();
