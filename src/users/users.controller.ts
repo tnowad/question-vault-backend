@@ -11,16 +11,18 @@ import {
   Query,
   HttpCode,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @ApiTags('users')
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(private readonly usersService: UsersService) {}
 
   @ApiOperation({ summary: 'Create a new user' })
   @ApiResponse({
@@ -28,6 +30,7 @@ export class UsersController {
     description: 'The user has been successfully created',
   })
   @Post()
+  @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() createUserDto: CreateUserDto) {
     return await this.usersService.create(createUserDto);
@@ -42,6 +45,7 @@ export class UsersController {
     description: 'The users have been successfully retrieved',
   })
   @Get()
+  @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.OK)
   findAll(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
@@ -57,6 +61,7 @@ export class UsersController {
     description: 'The user has been successfully retrieved',
   })
   @Get(':id')
+  @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.OK)
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.usersService.findOne({ id });
@@ -68,6 +73,7 @@ export class UsersController {
     description: 'The user has been successfully updated',
   })
   @Patch(':id')
+  @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.OK)
   update(
     @Param('id', ParseIntPipe) id: number,
@@ -82,6 +88,7 @@ export class UsersController {
     description: 'The user has been successfully deleted',
   })
   @Delete(':id')
+  @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   delete(@Param('id', ParseIntPipe) id: number) {
     return this.usersService.softDelete(id);
