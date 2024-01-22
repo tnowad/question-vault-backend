@@ -13,6 +13,7 @@ import { PermissionsModule } from './permissions/permissions.module';
 import { RolesModule } from './roles/roles.module';
 import { DatabaseSeederModule } from './database-seeder/database-seeder.module';
 import { PostsModule } from './posts/posts.module';
+import { CommentsModule } from './comments/comments.module';
 import configuration from './config/configuration';
 
 @Module({
@@ -50,6 +51,7 @@ import configuration from './config/configuration';
     RolesModule,
     DatabaseSeederModule,
     PostsModule,
+    CommentsModule,
   ],
   controllers: [],
   providers: [],
