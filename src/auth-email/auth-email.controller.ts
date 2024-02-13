@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, HttpStatus, Post } from '@nestjs/common';
 import { AuthEmailSignInDto } from './dto/auth-email-sign-in.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthEmailSignUpDto } from './dto/auth-email-sign-up.dto';
@@ -18,7 +18,13 @@ export class AuthEmailController {
     const user = await this.authEmailService.signIn(authEmailSignInDto);
     const token = await this.authService.createTokens(user);
 
-    return { user, token };
+    return {
+      statusCode: HttpStatus.OK,
+      data: {
+        user,
+        token,
+      },
+    };
   }
 
   @Post('sign-up')
@@ -35,6 +41,13 @@ export class AuthEmailController {
       refreshToken: '',
     };
 
-    return { user, token, message };
+    return {
+      statusCode: HttpStatus.OK,
+      data: {
+        user,
+        token,
+      },
+      message,
+    };
   }
 }
