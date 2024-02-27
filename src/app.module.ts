@@ -14,10 +14,17 @@ import { RolesModule } from './roles/roles.module';
 import { DatabaseSeederModule } from './database-seeder/database-seeder.module';
 import { PostsModule } from './posts/posts.module';
 import { CommentsModule } from './comments/comments.module';
-import configuration from './config/configuration';
+import appConfig from './common/configs/app.config';
+import jwtConfig from './common/configs/jwt.config';
+import databaseConfig from './common/configs/database.config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      ignoreEnvFile: true,
+      isGlobal: true,
+      load: [appConfig, databaseConfig, jwtConfig],
+    }),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'postgres',
@@ -36,11 +43,6 @@ import configuration from './config/configuration';
     }),
     CacheModule.register({
       isGlobal: true,
-    }),
-    ConfigModule.forRoot({
-      ignoreEnvFile: true,
-      isGlobal: true,
-      load: [configuration],
     }),
     UsersModule,
     AuthModule,
