@@ -14,6 +14,7 @@ import { RolesModule } from './roles/roles.module';
 import { DatabaseSeederModule } from './database-seeder/database-seeder.module';
 import { PostsModule } from './posts/posts.module';
 import { CommentsModule } from './comments/comments.module';
+import { ConfigsModule } from './configs/configs.module';
 import appConfig from './common/configs/app.config';
 import jwtConfig from './common/configs/jwt.config';
 import databaseConfig from './common/configs/database.config';
@@ -60,6 +61,7 @@ import databaseConfig from './common/configs/database.config';
     DatabaseSeederModule,
     PostsModule,
     CommentsModule,
+    ConfigsModule,
   ],
   controllers: [],
   providers: [],
