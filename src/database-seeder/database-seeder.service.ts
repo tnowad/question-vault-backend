@@ -1,4 +1,5 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Account } from 'src/accounts/entities/account.entity';
 import { Permission } from 'src/permissions/entities/permission.entity';
@@ -10,6 +11,7 @@ import { Repository } from 'typeorm';
 @Injectable()
 export class DatabaseSeederService implements OnModuleInit {
   constructor(
+    private readonly configService: ConfigService,
     @InjectRepository(Permission)
     private readonly permissionsRepository: Repository<Permission>,
     @InjectRepository(Role)
@@ -20,7 +22,7 @@ export class DatabaseSeederService implements OnModuleInit {
     private readonly accountsRepository: Repository<Account>,
   ) {}
   async onModuleInit() {
-    if (process.env.NODE_ENV === 'production') {
+    if (this.configService.get('app.env') === 'production') {
       return;
     }
     await this.seedPermissions();
