@@ -23,7 +23,7 @@ export class CreatePostDto {
   @IsOptional()
   @IsNumber()
   @Min(0)
-  score: number;
+  score?: number;
 
   @IsNotEmpty()
   @IsNumber()
