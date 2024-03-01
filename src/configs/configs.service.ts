@@ -4,6 +4,9 @@ import { UpdateConfigDto } from './dto/update-config.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Config } from './entities/config.entity';
 import { Repository } from 'typeorm';
+import { Cache } from 'cache-manager';
+import { Inject } from '@nestjs/common';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 
 @Injectable()
 export class ConfigsService {
@@ -17,7 +20,17 @@ export class ConfigsService {
   }
 
   async findAll(): Promise<Config[]> {
-    return await this.configsRepository.find();
+    const cacheKey = 'configs';
+    const cachedConfigs = await this.cacheManager.get<Config[] | null>(
+      cacheKey,
+    );
+    if (cachedConfigs) {
+      return cachedConfigs;
+    }
+
+    const configs = await this.configsRepository.find();
+    await this.cacheManager.set(cacheKey, configs, 60);
+    return configs;
   }
 
   async findOne(id: number): Promise<Config> {
