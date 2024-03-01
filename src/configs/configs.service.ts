@@ -55,7 +55,10 @@ export class ConfigsService {
   async update(id: number, updateConfigDto: UpdateConfigDto): Promise<Config> {
     const config = await this.findOne(id);
     Object.assign(config, updateConfigDto);
-    return await this.configsRepository.save(config);
+    await this.configsRepository.save(config);
+    await this.cacheManager.del(`config_${id}`);
+    await this.cacheManager.del('configs');
+    return config;
   }
 
   async remove(id: number): Promise<void> {
