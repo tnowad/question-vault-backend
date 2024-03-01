@@ -61,5 +61,7 @@ export class ConfigsService {
   async remove(id: number): Promise<void> {
     const config = await this.findOne(id);
     await this.configsRepository.remove(config);
+    await this.cacheManager.del(`config_${id}`);
+    await this.cacheManager.del('configs');
   }
 }
