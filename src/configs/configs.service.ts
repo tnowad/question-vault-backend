@@ -13,10 +13,13 @@ export class ConfigsService {
   constructor(
     @InjectRepository(Config)
     private readonly configsRepository: Repository<Config>,
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
   ) {}
   async create(createConfigDto: CreateConfigDto): Promise<Config> {
     const config = this.configsRepository.create(createConfigDto);
-    return await this.configsRepository.save(config);
+    const savedConfig = await this.configsRepository.save(config);
+    await this.cacheManager.del('configs');
+    return savedConfig;
   }
 
   async findAll(): Promise<Config[]> {
