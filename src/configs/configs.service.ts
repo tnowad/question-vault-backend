@@ -36,11 +36,19 @@ export class ConfigsService {
     return configs;
   }
 
+
   async findOne(id: number): Promise<Config> {
+    const cacheKey = `config_${id}`;
+    const cachedConfig = await this.cacheManager.get<Config | null>(cacheKey);
+    if (cachedConfig) {
+      return cachedConfig;
+    }
+
     const config = await this.configsRepository.findOneBy({ id });
     if (!config) {
       throw new NotFoundException(`Config with id ${id} not found`);
     }
+    await this.cacheManager.set(cacheKey, config, 60);
     return config;
   }
 
