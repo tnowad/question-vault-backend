@@ -4,7 +4,6 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { CacheModule } from '@nestjs/cache-manager';
 import { JwtModule } from '@nestjs/jwt';
-import { jwtConstants } from './auth/constants';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AccountsModule } from './accounts/accounts.module';
 import { AuthEmailModule } from './auth-email/auth-email.module';
@@ -26,8 +25,10 @@ import databaseConfig from './common/configs/database.config';
       isGlobal: true,
       load: [appConfig, databaseConfig, jwtConfig],
     }),
+    CacheModule.register({
+      isGlobal: true,
+    }),
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (config: ConfigService) => {
         return {
@@ -42,14 +43,6 @@ import databaseConfig from './common/configs/database.config';
           logging: true,
         };
       },
-    }),
-    JwtModule.register({
-      global: true,
-      secret: jwtConstants.secret,
-      signOptions: { expiresIn: '60s' },
-    }),
-    CacheModule.register({
-      isGlobal: true,
     }),
     UsersModule,
     AuthModule,
