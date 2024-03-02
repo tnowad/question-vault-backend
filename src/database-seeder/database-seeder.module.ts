@@ -6,10 +6,11 @@ import { Role } from 'src/roles/entities/role.entity';
 import { Account } from 'src/accounts/entities/account.entity';
 import { User } from 'src/users/entities/user.entity';
 import { ConfigModule } from '@nestjs/config';
+import { Config } from 'src/configs/entities/config.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Permission, Role, User, Account]),
+    TypeOrmModule.forFeature([Permission, Role, User, Account, Config]),
     ConfigModule,
   ],
   providers: [DatabaseSeederService],

@@ -2,8 +2,10 @@ import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Account } from 'src/accounts/entities/account.entity';
+import { Config } from 'src/configs/entities/config.entity';
 import { Permission } from 'src/permissions/entities/permission.entity';
 import { PermissionValue } from 'src/permissions/enums/permissions.enum';
+import { ConfigKey } from 'src/configs/enums/config.enum';
 import { Role } from 'src/roles/entities/role.entity';
 import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
@@ -20,12 +22,15 @@ export class DatabaseSeederService implements OnModuleInit {
     private readonly usersRepository: Repository<User>,
     @InjectRepository(Account)
     private readonly accountsRepository: Repository<Account>,
+    @InjectRepository(Config)
+    private readonly configsRepository: Repository<Config>,
   ) {}
   async onModuleInit() {
     if (this.configService.get('app.env') === 'production') {
       return;
     }
     await this.seedPermissions();
+    await this.seedConfigs();
     await this.seedRoles();
     await this.seedUsers();
   }
@@ -40,6 +45,25 @@ export class DatabaseSeederService implements OnModuleInit {
       .insert()
       .into(Permission)
       .values(permissions)
+      .execute();
+  }
+
+  async seedConfigs() {
+    await this.configsRepository
+      .createQueryBuilder()
+      .delete()
+      .from(Config)
+      .execute();
+
+    const configs = Object.values(ConfigKey).map((config) => ({
+      key: config,
+      value: '',
+    }));
+
+    await this.configsRepository
+      .createQueryBuilder()
+      .insert()
+      .values(configs)
       .execute();
   }
 
