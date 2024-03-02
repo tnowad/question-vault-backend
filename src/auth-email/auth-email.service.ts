@@ -9,6 +9,7 @@ import { AuthEmailSignUpDto } from './dto/auth-email-sign-up.dto';
 import * as bcrypt from 'bcryptjs';
 import { AccountsService } from 'src/accounts/accounts.service';
 import { UsersService } from 'src/users/users.service';
+import { RolesService } from 'src/roles/roles.service';
 import { DataSource } from 'typeorm';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { Account } from 'src/accounts/entities/account.entity';
@@ -20,6 +21,7 @@ export class AuthEmailService {
   constructor(
     private readonly accountsService: AccountsService,
     private readonly usersService: UsersService,
+    private readonly rolesService: RolesService,
     @InjectDataSource() private dataSource: DataSource,
   ) {}
 
