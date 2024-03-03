@@ -8,5 +8,6 @@ import { Config } from './entities/config.entity';
   imports: [TypeOrmModule.forFeature([Config])],
   controllers: [ConfigsController],
   providers: [ConfigsService],
+  exports: [ConfigsService],
 })
 export class ConfigsModule {}

@@ -28,7 +28,7 @@ export class ConfigsController {
 
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<Config> {
-    return await this.configsService.findOne(+id);
+    return await this.configsService.findOneOrFailed({ id: +id });
   }
 
   @Put(':id')
