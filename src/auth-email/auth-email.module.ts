@@ -5,9 +5,16 @@ import { AccountsModule } from 'src/accounts/accounts.module';
 import { UsersModule } from 'src/users/users.module';
 import { AuthModule } from 'src/auth/auth.module';
 import { RolesModule } from 'src/roles/roles.module';
+import { ConfigsModule } from 'src/configs/configs.module';
 
 @Module({
-  imports: [AccountsModule, UsersModule, AuthModule, RolesModule],
+  imports: [
+    AccountsModule,
+    UsersModule,
+    AuthModule,
+    RolesModule,
+    ConfigsModule,
+  ],
   providers: [AuthEmailService],
   controllers: [AuthEmailController],
 })

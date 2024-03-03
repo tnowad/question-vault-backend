@@ -15,6 +15,8 @@ import { InjectDataSource } from '@nestjs/typeorm';
 import { Account } from 'src/accounts/entities/account.entity';
 import { User } from 'src/users/entities/user.entity';
 import { AuthProvidersEnum } from 'src/auth/auth-providers.enum';
+import { ConfigsService } from 'src/configs/configs.service';
+import { ConfigKey } from 'src/configs/enums/config.enum';
 
 @Injectable()
 export class AuthEmailService {
@@ -22,6 +24,7 @@ export class AuthEmailService {
     private readonly accountsService: AccountsService,
     private readonly usersService: UsersService,
     private readonly rolesService: RolesService,
+    private readonly configsService: ConfigsService,
     @InjectDataSource() private dataSource: DataSource,
   ) {}
 
@@ -80,6 +83,14 @@ export class AuthEmailService {
       );
     }
 
+    const defaultConfigRole = await this.configsService.findOneOrFailed({
+      key: ConfigKey.ROLE_DEFAULT_USER_CREATE,
+    });
+
+    const defaultRole = await this.rolesService.findOneOrFailed({
+      value: defaultConfigRole.value,
+    });
+
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
 
@@ -91,6 +102,8 @@ export class AuthEmailService {
         fullName,
         phone,
       });
+
+      user.roles = [defaultRole];
 
       await queryRunner.manager.getRepository(User).save(user);
 
