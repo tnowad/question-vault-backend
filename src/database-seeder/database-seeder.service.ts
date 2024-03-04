@@ -75,7 +75,6 @@ export class DatabaseSeederService implements OnModuleInit {
       .execute();
 
     const existingPermissions = await this.permissionsRepository.find();
-
     const permissions = existingPermissions.reduce(
       (acc, permission) => {
         acc[permission.value] = permission;
@@ -192,6 +191,20 @@ export class DatabaseSeederService implements OnModuleInit {
     ];
 
     await this.rolesRepository.save(roles);
+
+    const existingConfigs = await this.configsRepository.find();
+    const configs = existingConfigs.reduce(
+      (acc, config) => {
+        acc[config.key] = config;
+        return acc;
+      },
+      {} as Record<ConfigKey, Config>,
+    );
+
+    configs[ConfigKey.ROLE_DEFAULT_USER_ANONYMOUS].value = anonymousRole.value;
+    configs[ConfigKey.ROLE_DEFAULT_USER_CREATE].value = userRole.value;
+
+    await this.configsRepository.save(Object.values(configs));
   }
 
   async seedUsers() {
