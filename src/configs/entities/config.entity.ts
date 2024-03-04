@@ -1,4 +1,5 @@
 import { Column, Entity, Generated, PrimaryGeneratedColumn } from 'typeorm';
+import { ConfigKey } from '../enums/config.enum';
 
 @Entity({ name: 'configs' })
 export class Config {
@@ -10,7 +11,7 @@ export class Config {
   uuid: string;
 
   @Column({ unique: true })
-  key: string;
+  key: ConfigKey;
 
   @Column()
   value: string;
