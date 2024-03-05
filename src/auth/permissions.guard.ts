@@ -6,13 +6,17 @@ import { RolesService } from 'src/roles/roles.service';
 import { User } from 'src/users/entities/user.entity';
 import { ConfigKey } from 'src/configs/enums/config.enum';
 import { PermissionValue } from 'src/permissions/enums/permissions.enum';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 
 export class PermissionsGuard implements CanActivate {
   constructor(
     private reflector: Reflector,
-    @Inject(ConfigsService) private readonly configsService: ConfigsService,
-    @Inject(RolesService) private readonly rolesService: RolesService,
+    private readonly configsService: ConfigsService,
+    private readonly rolesService: RolesService,
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
   ) {}
+  count: number = 0;
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const permissions = this.reflector.get(
@@ -39,6 +43,13 @@ export class PermissionsGuard implements CanActivate {
   }
 
   private async getDefaultUserPermissions(): Promise<string[]> {
+    const cacheKey = 'role::default';
+    const cachedPermissions = await this.cacheManager.get<string[]>(cacheKey);
+
+    if (cachedPermissions) {
+      return cachedPermissions;
+    }
+
     const defaultConfigRole = await this.configsService.findOne({
       key: ConfigKey.ROLE_DEFAULT_USER_ANONYMOUS,
     });
@@ -48,11 +59,16 @@ export class PermissionsGuard implements CanActivate {
     }
 
     const defaultRole = await this.rolesService.findOne({
-      value: defaultConfigRole.key,
+      where: { value: defaultConfigRole.value },
+      relations: ['permissions'],
     });
 
-    return defaultRole
+    const permissions = defaultRole?.permissions
       ? defaultRole.permissions.map((permission) => permission.value)
       : [];
+
+    await this.cacheManager.set(cacheKey, permissions, 6000);
+
+    return permissions;
   }
 }
