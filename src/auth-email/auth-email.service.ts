@@ -88,7 +88,9 @@ export class AuthEmailService {
     });
 
     const defaultRole = await this.rolesService.findOneOrFailed({
-      value: defaultConfigRole.value,
+      where: {
+        value: defaultConfigRole.value,
+      },
     });
 
     const queryRunner = this.dataSource.createQueryRunner();
