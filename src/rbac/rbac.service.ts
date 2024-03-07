@@ -1,17 +1,34 @@
-import { Injectable } from '@nestjs/common';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Inject, Injectable } from '@nestjs/common';
 import { PermissionValue } from 'src/permissions/enums/permissions.enum';
+import { Role } from 'src/roles/entities/role.entity';
+import { RolesService } from 'src/roles/roles.service';
+import { Cache } from 'cache-manager';
 
 @Injectable()
 export class RbacService {
-  constructor() {}
+  constructor(
+    private readonly rolesService: RolesService,
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
+  ) {}
+  async getLookupAllRoles(role: Role, roles: Role[] = []): Promise<Role[]> {
+    role = (await this.rolesService.findOne({
+      where: { id: role.id },
+      relations: { parentRoles: true, permissions: true },
+      cache: { id: `role::${role.id}`, milliseconds: 60000 },
+    })) as Role;
 
-  async getPermissions(role: string): Promise<PermissionValue[]> {
-    console.log('role', role);
-    // get all parent roles for the role
-    // get all permissions for the role
-    // get all permissions for the parent roles
-    // return all permissions
-    return [];
+    if (!roles.find((r) => r.id === role.id)) {
+      roles.push(role);
+
+      if (role.parentRoles && role.parentRoles.length > 0) {
+        for (const parentRole of role.parentRoles) {
+          await this.getLookupAllRoles(parentRole, roles);
+        }
+      }
+    }
+
+    return roles;
   }
 
   async hasPermission(
