@@ -4,6 +4,6 @@ import { AuthGithubService } from './auth-github.service';
 
 @Module({
   controllers: [AuthGithubController],
-  providers: [AuthGithubService]
+  providers: [AuthGithubService],
 })
 export class AuthGithubModule {}
