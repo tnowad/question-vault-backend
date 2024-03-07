@@ -31,6 +31,34 @@ export class RbacService {
     return roles;
   }
 
+  async getPermissions(roleValue: string): Promise<PermissionValue[]> {
+    const cacheKey = `rbac::permissions::${roleValue}`;
+    if (await this.cacheManager.get(cacheKey)) {
+      return (await this.cacheManager.get(cacheKey)) ?? [];
+    }
+    const role = await this.rolesService.findOne({
+      where: { value: roleValue },
+      relations: { parentRoles: true },
+    });
+
+    if (!role) {
+      return [];
+    }
+
+    const roles = await this.getLookupAllRoles(role);
+
+    const permissions = roles.reduce<PermissionValue[]>((acc, role) => {
+      if (role.permissions) {
+        return [...acc, ...role.permissions.map((p) => p.value)];
+      }
+      return acc;
+    }, []);
+
+    await this.cacheManager.set(cacheKey, permissions, 60000);
+
+    return permissions;
+  }
+
   async hasPermission(
     role: string,
     permission: PermissionValue,
