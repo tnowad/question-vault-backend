@@ -12,11 +12,25 @@ export class RbacService {
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
   ) {}
 
-  async getLookupAllRoles(role: Role, roles: Role[] = []): Promise<Role[]> {
+  async getLookupAllRoles(role: Role): Promise<Role[]> {
+    const cacheKey = `rbac::allRoles::${role.id}`;
+    const cachedRoles = await this.cacheManager.get<Role[]>(cacheKey);
+    if (cachedRoles) {
+      return cachedRoles;
+    }
+
+    const roles = await this.getRolesRecursive(role);
+    await this.cacheManager.set(cacheKey, roles, 60000);
+    return roles;
+  }
+
+  private async getRolesRecursive(
+    role: Role,
+    roles: Role[] = [],
+  ): Promise<Role[]> {
     role = (await this.rolesService.findOne({
       where: { id: role.id },
       relations: { parentRoles: true, permissions: true },
-      cache: { id: `role::${role.id}`, milliseconds: 60000 },
     })) as Role;
 
     if (!roles.find((r) => r.id === role.id)) {
@@ -24,7 +38,7 @@ export class RbacService {
 
       if (role.parentRoles && role.parentRoles.length > 0) {
         for (const parentRole of role.parentRoles) {
-          await this.getLookupAllRoles(parentRole, roles);
+          await this.getRolesRecursive(parentRole, roles);
         }
       }
     }
