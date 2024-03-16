@@ -13,6 +13,7 @@ import { DatabaseSeederModule } from './database-seeder/database-seeder.module';
 import { PostsModule } from './posts/posts.module';
 import { CommentsModule } from './comments/comments.module';
 import { ConfigsModule } from './configs/configs.module';
+import { RbacModule } from './rbac/rbac.module';
 import appConfig from './common/configs/app.config';
 import jwtConfig from './common/configs/jwt.config';
 import databaseConfig from './common/configs/database.config';
@@ -54,6 +55,7 @@ import databaseConfig from './common/configs/database.config';
     PostsModule,
     CommentsModule,
     ConfigsModule,
+    RbacModule,
   ],
   controllers: [],
   providers: [],
